@@ -1,0 +1,104 @@
+[
+	uuid(bf4dc912-e52f-4904-8ebe-9317c1bdd497),
+		version(1.0),
+]
+interface DsSvc
+{
+
+	typedef enum _DS_TOKEN_LIFETIME_TYPE
+	{
+		DS_TOKEN_LIFETIME_TYPE_Type0 = 0x0,
+		DS_TOKEN_LIFETIME_TYPE_Type1
+	} DS_TOKEN_LIFETIME_TYPE, * PDS_TOKEN_LIFETIME_TYPE;
+
+	typedef enum _DS_TOKEN_USAGE
+	{
+		DS_TOKEN_USAGE_Type0 = 0x0,
+		DS_TOKEN_USAGE_Type1
+	} DS_TOKEN_USAGE, * PDS_TOKEN_USAGE;
+
+	typedef enum _DS_SHARE_PERMISSION
+	{
+		DS_SHARE_PERMISSION_Read,
+		DS_SHARE_PERMISSION_Write,
+		DS_SHARE_PERMISSION_ReadWrite
+	} DS_SHARE_PERMISSION, * PDS_SHARE_PERMISSION;
+
+	typedef enum _DS_SHARE_MODE
+	{
+		DS_SHARE_MODE_None = 0x0,
+		DS_SHARE_MODE_Write,
+		DS_SHARE_MODE_ReadWrite,
+		DS_SHARE_MODE_Delete,
+		DS_SHARE_MODE_ReadDelete,
+		DS_SHARE_MODE_WriteDelete,
+		DS_SHARE_MODE_ReadWriteDelete
+	} DS_SHARE_MODE, * PDS_SHARE_MODE;
+
+	typedef enum _DS_SCOPE_TYPE
+	{
+		UserSid
+	} DS_SCOPE_TYPE, * PDS_SCOPE_TYPE;
+
+	typedef enum _DS_OPEN_FLAGS
+	{
+		DS_OPEN_FLAGS_None = 0,
+		DS_OPEN_FLAGS_OpenFlagOverlapped = 1,
+		DS_OPEN_FLAGS_DeleteOnClose = 2,
+	} DS_OPEN_FLAGS, * PDS_OPEN_FLAGS;
+
+	typedef struct _DS_SHARE_SCOPE_ENTRY
+	{
+		DS_SCOPE_TYPE ScopeType;
+		[unique] [string] wchar_t* ScopeValue;
+	} DS_SHARE_SCOPE_ENTRY, * PDS_SHARE_SCOPE_ENTRY;
+
+	typedef struct _DS_SHARE_SCOPE
+	{
+		long ScopeCount;
+		[size_is()] [length_is(ScopeCount)] DS_SHARE_SCOPE_ENTRY Scopes[20];
+	} DS_SHARE_SCOPE, * PDS_SHARE_SCOPE;
+
+	typedef struct _DS_SHARE_ACCESS_CONTROL
+	{
+		DS_SHARE_PERMISSION SharePermission;
+		DS_SHARE_MODE ShareMode;
+		DS_SHARE_SCOPE Scope;
+	} DS_SHARE_ACCESS_CONTROL, * PDS_SHARE_ACCESS_CONTROL;
+
+	long RpcDSSCreateSharedFileToken(
+		[in][string] wchar_t* filepath,
+		[in]PDS_SHARE_ACCESS_CONTROL access_control,
+		DS_TOKEN_LIFETIME_TYPE token_lifetime,
+		DS_TOKEN_USAGE token_usage,
+		[out][ref][string] wchar_t** token);
+
+	long RpcDSSGetSharedFileName(
+		[in][string] wchar_t* token,
+		[out][ref][string] wchar_t** file_name);
+
+	long RpcDSSGetSharingTokenInformation(
+		[in][string] wchar_t* token,
+		[out][ref][string] wchar_t** filepath,
+		[out][ref][string] wchar_t** user_sid,
+		[out][ref]PDS_SHARE_PERMISSION share_permission);
+
+	long RpcDSSDelegateSharingToken(
+		[in][string] wchar_t* token,
+		[in]PDS_SHARE_ACCESS_CONTROL access_control);
+
+	long RpcDSSRemoveSharingToken(
+		[in][string] wchar_t* token);
+
+	long RpcDSSOpenSharedFile(
+		[in][string] wchar_t* token,
+		[in]DS_OPEN_FLAGS flags,
+		[out]hyper* file_handle);
+
+	long RpcDSSCopyFromSharedFile(
+		[in][string] wchar_t* token,
+		[in][string] wchar_t* dest_file);
+
+	long RpcDSSRemoveExpiredTokens(
+	);
+}

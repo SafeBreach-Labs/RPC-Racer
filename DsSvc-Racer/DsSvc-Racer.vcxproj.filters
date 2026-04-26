@@ -15,24 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RPC-Racer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StorSvc_h.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Midl Include="StorSvc.idl">
-      <Filter>Header Files</Filter>
+    <Midl Include="DsSvc.idl">
+      <Filter>Source Files</Filter>
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RPC-Racer.cpp">
+    <ClCompile Include="DsSvc-Racer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StorSvc_s.c">
+    <ClCompile Include="DsSvc_s.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DsSvc-Racer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DsSvc_h.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
